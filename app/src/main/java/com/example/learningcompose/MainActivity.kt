@@ -24,13 +24,15 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun AppContent() {
+        val list = listOf<String>("karthik","karthik rk")
         BasicsCodelabTheme {
             Surface(color = MaterialTheme.colors.background) {
-                Column {
-                    Greetings(name = "karthik")
-                    Divider(color = Color.Black)
-                    Greetings(name = "karthik rk")
-                }
+                    Column {
+                        list.forEach { names ->
+                            Greetings(name = names)
+                            Divider(color = Color.Black)
+                        }
+                    }
             }
         }
     }
