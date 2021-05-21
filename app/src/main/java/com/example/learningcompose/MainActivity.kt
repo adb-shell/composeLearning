@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +32,7 @@ class MainActivity : ComponentActivity() {
             mutableStateOf(0)
         }
         val list = listOf<String>("karthik","karthik rk")
+        val longList = List(100){"Hello item number: $it"}
         BasicsCodelabTheme {
             Surface(color = MaterialTheme.colors.background) {
                     Column {
@@ -41,6 +44,7 @@ class MainActivity : ComponentActivity() {
                         buttonCounterWithStateHoisting(count = coutner.value) {newValue->
                             coutner.value = newValue
                         }
+                        renderLongList(list = longList, modifier = Modifier.weight(1f))
                     }
             }
         }
@@ -55,8 +59,20 @@ class MainActivity : ComponentActivity() {
             mutableStateOf(0)
         }
 
-        Button(onClick = {counter.value++}) {
+        Button(onClick = {counter.value++},colors = ButtonDefaults.buttonColors(
+            backgroundColor = if (counter.value>5) Color.Yellow else Color.Cyan
+        )) {
             Text(text = "Number of times button is clicked:${counter.value}")
+        }
+    }
+
+    @Composable
+    fun renderLongList(list: List<String>,modifier: Modifier){
+        LazyColumn() {
+            items(list){name->
+                Greetings(name = name)
+                Divider(color = Color.Black)
+            }
         }
     }
 
