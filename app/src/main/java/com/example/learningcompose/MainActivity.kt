@@ -4,13 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.learningcompose.ui.theme.BasicsCodelabTheme
 import com.example.learningcompose.ui.theme.LearningComposeTheme
 
@@ -24,6 +26,9 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun AppContent() {
+        val coutner  = remember {
+            mutableStateOf(0)
+        }
         val list = listOf<String>("karthik","karthik rk")
         BasicsCodelabTheme {
             Surface(color = MaterialTheme.colors.background) {
@@ -32,15 +37,43 @@ class MainActivity : ComponentActivity() {
                             Greetings(name = names)
                             Divider(color = Color.Black)
                         }
+                        buttonCounter()
+                        buttonCounterWithStateHoisting(count = coutner.value) {newValue->
+                            coutner.value = newValue
+                        }
                     }
             }
+        }
+    }
+
+    /**
+     * Local state for the button with remember keyword.
+     */
+    @Composable
+    fun buttonCounter(){
+        val counter = remember {
+            mutableStateOf(0)
+        }
+
+        Button(onClick = {counter.value++}) {
+            Text(text = "Number of times button is clicked:${counter.value}")
+        }
+    }
+
+    /**
+     * Composable function with state hoisting.
+     */
+    @Composable
+    fun buttonCounterWithStateHoisting(count:Int, updateCounter:(counter:Int)->Unit){
+        Button(onClick = {updateCounter(count+1)}) {
+            Text(text = "Number of times button is clicked:$count")
         }
     }
 
     @Composable
     fun Greetings(name:String){
         ApplyYellowBg {
-            Text(text = "Hello $name")
+            Text(text = "Hello $name",modifier = Modifier.padding(16.dp))
         }
     }
 
