@@ -3,6 +3,9 @@ package com.example.learningcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,7 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.learningcompose.ui.theme.BasicsCodelabTheme
-import com.example.learningcompose.ui.theme.LearningComposeTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +72,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun renderLongList(list: List<String>,modifier: Modifier){
-        LazyColumn() {
+        LazyColumn(modifier = modifier) {
             items(list){name->
                 Greetings(name = name)
                 Divider(color = Color.Black)
@@ -88,8 +92,14 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun Greetings(name:String){
+        var isSelected by remember {
+            mutableStateOf(false)
+        }
+        val bgColor by animateColorAsState(targetValue = if(isSelected) Color.Cyan else Color.Yellow)
         ApplyYellowBg {
-            Text(text = "Hello $name",modifier = Modifier.padding(16.dp))
+            Text(text = "Hello $name",modifier = Modifier.padding(16.dp).background(color = bgColor).clickable {
+                isSelected = !isSelected
+            })
         }
     }
 
