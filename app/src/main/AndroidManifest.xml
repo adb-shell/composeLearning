@@ -10,6 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LearningCompose">
         <activity
+            android:name=".ComposeLayoutActivity"
+            android:exported="true"
+            android:label="@string/title_activity_compose_layout"
+            android:theme="@style/Theme.LearningCompose.NoActionBar" />
+        <activity
             android:name=".MainActivity2"
             android:exported="true"
             android:label="@string/title_activity_main2"
