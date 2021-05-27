@@ -8,26 +8,77 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.learningcompose.ui.theme.LayoutsCodelabTheme
-import com.example.learningcompose.ui.theme.LearningComposeTheme
 
 class ComposeLayoutActivity : ComponentActivity() {
+
+    val bottomList = listOf<String>("Home","Favorite","Add")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Appcontent()
+        }
+    }
+
+    @Composable
+    private fun Appcontent() {
+        LayoutsCodelabTheme {
+            addScafoldAsRootContent()
+        }
+    }
+
+    @Composable
+    private fun addScafoldAsRootContent() {
+        Scaffold(
+            topBar = {
+                TopAppBar(title = {
+                    Text(text = "LayoutsCodelab")
+                },
+                    actions = {
+                        IconButton(onClick = { /* doSomething() */ }) {
+                            Icon(Icons.Filled.Favorite, contentDescription = null)
+                        }
+                        IconButton(onClick = { /* doSomething() */ }) {
+                            Icon(Icons.Filled.Add, contentDescription = null)
+                        }
+                    })
+            },
+            bottomBar = {
+                BottomNavigation(elevation = 3.dp) {
+                    /**
+                     * Easily bottom items can be rendered with the for loop
+                     */
+                    bottomList.forEach {bottomTabName->
+                        BottomNavigationItem(
+                            icon = {Icon(Icons.Filled.Favorite, contentDescription = null)},
+                            label = { Text(text = bottomTabName)},
+                            selected = true,
+                            onClick = {}
+                        )
+                    }
+                }
+            }
+        ) { innerPadding ->
+            Column(modifier = Modifier.padding(innerPadding)) {
+                addPhotographerCard()
+                addMaterialButton()
+            }
         }
     }
 
@@ -82,15 +133,5 @@ class ComposeLayoutActivity : ComponentActivity() {
     @Composable
     fun DefaultPreview() {
         Appcontent()
-    }
-
-    @Composable
-    private fun Appcontent() {
-        LayoutsCodelabTheme {
-            Column() {
-                addPhotographerCard()
-                addMaterialButton()
-            }
-        }
     }
 }
