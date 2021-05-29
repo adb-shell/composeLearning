@@ -2,4 +2,5 @@
     <string name="app_name">LearningCompose</string>
     <string name="title_activity_main2">MainActivity2</string>
     <string name="title_activity_compose_layout">ComposeLayoutActivity</string>
+    <string name="title_activity_list">ListActivity</string>
 </resources>
