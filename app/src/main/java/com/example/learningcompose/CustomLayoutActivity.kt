@@ -3,13 +3,16 @@ package com.example.learningcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.Layout
@@ -21,6 +24,14 @@ import androidx.compose.ui.unit.dp
 import com.example.learningcompose.ui.theme.LearningComposeTheme
 
 class CustomLayoutActivity : ComponentActivity() {
+
+    val topics = listOf(
+        "Arts & Crafts", "Beauty", "Books", "Business", "Comics", "Culinary",
+        "Design", "Fashion", "Film", "History", "Maths", "Music", "People", "Philosophy",
+        "Religion", "Social sciences", "Technology", "TV", "Writing"
+    )
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -42,8 +53,17 @@ class CustomLayoutActivity : ComponentActivity() {
                 modifier = Modifier.CustomPadding(42.dp),
                 fontStyle = FontStyle.Italic
             )
+            
+            StaggerdGrid(modifier = Modifier.padding(16.dp)) {
+                topics.forEach {topic->
+                    cardChip(
+                        modifier = Modifier.padding(5.dp),
+                        content = topic
+                    )
+                }
+            }
 
-            CustomColoumn(modifier = Modifier.padding(16.dp)) {
+            /*CustomColoumn(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = "This is text in custom col row 1",
                     modifier = Modifier.padding(42.dp),
@@ -59,6 +79,26 @@ class CustomLayoutActivity : ComponentActivity() {
                     modifier = Modifier.padding(42.dp),
                     fontStyle = FontStyle.Normal
                 )
+            }*/
+        }
+    }
+
+    @Composable
+    private fun cardChip(modifier: Modifier,content:String){
+        Row(modifier = modifier) {
+            Card(
+                border = BorderStroke(color = Color.Black, width = Dp.Hairline),
+                shape = MaterialTheme.shapes.large,
+                elevation = 3.dp
+            ) {
+                Row{
+                    Box(
+                        modifier = Modifier.size(16.dp, 16.dp)
+                            .background(color = MaterialTheme.colors.secondary)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(text = content)
+                }
             }
         }
     }
@@ -94,6 +134,62 @@ class CustomLayoutActivity : ComponentActivity() {
             placeable.placeRelative(0,placeableY)
         }
     })
+
+
+    /**
+     * Complex custom layout staggered grid layout
+     * Logic is as follows
+     * Step 1: calculate the height and width of each child
+     * Step 2: calculate the staggerd grid height by adding all child heights
+     * Step 3: calculate the staggerd grid width by adding all child widths
+     * Step 4: calculate the Y co-ordinate of each row.
+     * Step 5: calculate the X co-ordinate of each child in a row
+     * Step 6: place the children's relative to X nd Y co-ordinates calculated in the above steps.
+     */
+    @Composable
+    private fun StaggerdGrid(
+        modifier: Modifier,
+        rows: Int = 3,
+        content: @Composable ()-> Unit
+    ){
+        Layout(
+            content = content,
+            modifier = modifier){measurables,constraints->
+
+            val rowWidths = IntArray(rows){0}
+            val rowHeights = IntArray(rows){0}
+
+            val placeables = measurables.mapIndexed { index, measurable ->
+                val placeable = measurable.measure(constraints)
+                val row = index % rows
+                rowWidths[row]+=placeable.width
+                rowHeights[row] = maxOf(rowHeights[row],placeable.height)
+                placeable
+            }
+
+            // Grid's height is the sum of the tallest element of each row
+            // coerced to the height constraints
+            val gridHeight = rowHeights.sumBy { it }
+                .coerceIn(constraints.minHeight.rangeTo(constraints.maxHeight))
+
+            val gridWidth = rowWidths.maxOrNull()
+                ?.coerceIn(constraints.minWidth.rangeTo(constraints.maxWidth))?:constraints.minWidth
+
+            val rowY = IntArray(rows){0}
+            for (i in 1 until rows){
+                rowY[i] = rowY[i-1]+rowHeights[i-1]
+            }
+
+            layout(gridWidth, gridHeight) {
+                val rowX = IntArray(rows){0}
+                placeables.mapIndexed { index, placeable ->
+                    val row = index % rows
+                    placeable.placeRelative(rowX[row],rowY[row])
+                    rowX[row]+=placeable.width
+                }
+            }
+        }
+    }
 
     /**
      * Custom layout composable example
