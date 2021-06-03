@@ -6,11 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.AlignmentLine
@@ -83,6 +81,44 @@ class CustomLayoutActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * Therefore, Row's height constraint will be the max minIntrinsicHeight of the Texts.
+     * Divider will then expand its height to the height constraint given by Row.
+     */
+    @Composable
+    private fun TextWithDivider() {
+        Row(modifier = Modifier.height(IntrinsicSize.Min)) {
+            Text(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 4.dp)
+                    .wrapContentWidth(Alignment.Start),
+                text = "Hello"
+            )
+            Divider(color = Color.Black, modifier = Modifier
+                .fillMaxHeight()
+                .width(1.dp))
+            Text(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 4.dp)
+                    .wrapContentWidth(Alignment.End),
+                text = "There!"
+            )
+        }
+    }
+
+    @Preview
+    @Composable
+    fun textWithDividerPreview(){
+        LearningComposeTheme {
+            // A surface container using the 'background' color from the theme
+            Surface(color = MaterialTheme.colors.background) {
+                TextWithDivider()
+            }
+        }
+    }
+
     @Composable
     private fun cardChip(modifier: Modifier,content:String){
         Row(modifier = modifier) {
@@ -93,7 +129,8 @@ class CustomLayoutActivity : ComponentActivity() {
             ) {
                 Row{
                     Box(
-                        modifier = Modifier.size(16.dp, 16.dp)
+                        modifier = Modifier
+                            .size(16.dp, 16.dp)
                             .background(color = MaterialTheme.colors.secondary)
                     )
                     Spacer(Modifier.width(4.dp))
