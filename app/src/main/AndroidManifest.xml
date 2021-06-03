@@ -10,6 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LearningCompose">
         <activity
+            android:name=".ConstraintLayoutActivity"
+            android:exported="true"
+            android:label="@string/title_activity_constraint_layout"
+            android:theme="@style/Theme.LearningCompose.NoActionBar" />
+        <activity
             android:name=".CustomLayoutActivity"
             android:exported="true"
             android:label="@string/title_activity_custom_layout"

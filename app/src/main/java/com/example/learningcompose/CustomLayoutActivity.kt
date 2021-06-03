@@ -218,6 +218,19 @@ class CustomLayoutActivity : ComponentActivity() {
         }
     }
 
+
+    /**
+     * We can define multiple previews for each components.
+     */
+    @Preview
+    @Composable
+    fun chipComposable(){
+        cardChip(
+            modifier = Modifier.padding(5.dp),
+            content = "Hi there"
+        )
+    }
+
     @Preview(showBackground = true)
     @Composable
     fun DefaultPreview() {
